@@ -16,11 +16,19 @@ const login = async (email, password) => {
 
     const expiration = (new Date()).setHours((new Date()).getHours() + 1);
 
+    //para abrir con una cuenta con rol administrador
+    var rolActual='rol';
+    if(response.email=="cuentaadministrador@gmail.com"){
+        rolActual='admin';
+    }else{
+        rolActual='user';
+    }
+
     const token = Buffer.from(JSON.stringify({
         name: response.name,
         email: response.email,
         id: response.id,
-        roles: ['user'],
+        roles: [rolActual],
         expiration: expiration,
     })).toString('base64');
 
@@ -34,7 +42,7 @@ const login = async (email, password) => {
 
     return {
         code: 200,
-        message: token
+        message: token,
     };
 }
 
