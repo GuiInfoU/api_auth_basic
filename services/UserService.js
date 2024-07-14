@@ -184,6 +184,11 @@ const getUserByFilter = async (req) => {
         console.log(inter);
         if(inter.length !== 0){
             filtro3 = {id:{[Op.in]:inter}}
+        }else{
+            return {
+                code: 200,
+                message: inter
+            }
         }
     }else if(grupo1 !== null){
         filtro3 = {id:{[Op.in]:grupo1}}
