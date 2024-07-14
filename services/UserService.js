@@ -148,7 +148,17 @@ const getUserByFilter = async (req) => {
         });
         let idUserFilter = usersId.map(session => session.id_user);
         idUserFilter = idUserFilter.filter((item,index) => idUserFilter.indexOf(item) === index);
-        filtro3 = {id:{[Op.notIn]:idUserFilter}};
+        const usersId2 = await db.Session.findAll({
+            attributes: ['id_user'],
+            where: {
+                id_user:{
+                    [Op.notIn]:idUserFilter
+                }
+            }
+        });
+        let idUserFilter2 = usersId2.map(session => session.id_user);
+        idUserFilter2 = idUserFilter2.filter((item,index) => idUserFilter2.indexOf(item) === index);
+        filtro3 = {id:{[Op.in]:idUserFilter2},};
     }
 
     const sesionDespDate = req.query.login_after_date;
