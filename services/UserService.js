@@ -134,7 +134,7 @@ const getUserByFilter = async (req) => {
     }
 
     const sesionAnteDate = req.query.login_before_date;
-    let filtro3 = {};
+    let grupo1=null;
     if(!sesionAnteDate || sesionAnteDate === null){
     }else{
         let filterDate = parseInt(sesionAnteDate,10);
@@ -158,11 +158,11 @@ const getUserByFilter = async (req) => {
         });
         let idUserFilter2 = usersId2.map(session => session.id_user);
         idUserFilter2 = idUserFilter2.filter((item,index) => idUserFilter2.indexOf(item) === index);
-        filtro3 = {id:{[Op.in]:idUserFilter2},};
+        grupo1 = idUserFilter2;
     }
 
     const sesionDespDate = req.query.login_after_date;
-    let filtro4 = {};
+    let grupo2=null;
     if(!sesionDespDate || sesionDespDate === null) {
     }else{
         let filterDate = parseInt(sesionDespDate,10);
@@ -176,7 +176,20 @@ const getUserByFilter = async (req) => {
         });
         let idUserFilter = usersId.map(session => session.id_user);
         idUserFilter = idUserFilter.filter((item,index) => idUserFilter.indexOf(item) === index);
-        filtro4 = {id:{[Op.in]:idUserFilter}};
+        grupo2 = idUserFilter;
+    }
+    let filtro3 = {};
+    if(grupo1 !== null && grupo2 !== null){
+        let inter = grupo1.filter(id_user => grupo2.includes(id_user));
+        console.log(inter);
+        if(inter.length !== 0){
+            filtro3 = {id:{[Op.in]:inter}}
+        }
+    }else if(grupo1 !== null){
+        filtro3 = {id:{[Op.in]:grupo1}}
+    }
+    else if(grupo2 !== null){
+        filtro3 = {id:{[Op.in]:grupo2}}
     }
 
     let listaFiltros = {};
@@ -188,9 +201,6 @@ const getUserByFilter = async (req) => {
     }
     if (filtro3 !== null || filtro3 !== undefined) {
         Object.assign(listaFiltros, filtro3);
-    }
-    if (filtro4 !== null || filtro4 !== undefined) {
-        Object.assign(listaFiltros, filtro4);
     }
 
     return {
